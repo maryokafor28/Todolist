@@ -1,6 +1,4 @@
-// TodoApp with comments explained like a 15-year-old 👦
 import React, { useState, useEffect } from "react";
-import { format, addDays, subDays } from "date-fns";
 
 // This defines what each task should look like
 interface Todo {
@@ -13,38 +11,68 @@ interface Todo {
   color?: string; // Optional: background color for the task
 }
 
+// 🎨 Color options for task backgrounds
+const colors = [
+  "bg-yellow-100",
+  "bg-purple-200",
+  "bg-darkblue-100",
+  "bg-blue-100",
+  "bg-pink-100",
+  "bg-violet-200",
+];
+
+// 🧠 Helper functions for date stuff
+const formatDate = (date: Date) => {
+  return date.toISOString().split("T")[0]; // YYYY-MM-DD format
+};
+
+const formatDateDisplay = (date: Date) => {
+  return date.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+const formatDayName = (date: Date) => {
+  return date.toLocaleDateString("en-US", { weekday: "long" });
+};
+
+const addDays = (date: Date, days: number) => {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+};
+
+const subDays = (date: Date, days: number) => {
+  const result = new Date(date);
+  result.setDate(result.getDate() - days);
+  return result;
+};
+
 function TodoApp() {
-  // All the tasks
-  const [todos, setTodos] = useState<Todo[]>([]);
-  // What you are typing in the input box
-  const [input, setInput] = useState("");
-  // Which day we are looking at
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  // Which task we’re editing right now (if any)
-  const [editingId, setEditingId] = useState<number | null>(null);
-  // What you’re typing when editing
-  const [editingText, setEditingText] = useState("");
-  // Which tab is active (all/completed/pending)
+  // ✅ When the app starts, load tasks from localStorage (if any)
+  const [todos, setTodos] = useState<Todo[]>(() => {
+    const stored = localStorage.getItem("todos");
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  const [input, setInput] = useState(""); // What you're typing
+  const [selectedDate, setSelectedDate] = useState(new Date()); // The day we're looking at
+  const [editingId, setEditingId] = useState<number | null>(null); // Are we editing?
+  const [editingText, setEditingText] = useState(""); // What we're editing
   const [filterTab, setFilterTab] = useState<"all" | "completed" | "pending">(
     "all"
   );
 
-  // When the page loads, check local storage to see if you already had tasks saved
-  useEffect(() => {
-    const storedTodos = localStorage.getItem("todos");
-    if (storedTodos) {
-      setTodos(JSON.parse(storedTodos));
-    }
-  }, []);
-
-  // Whenever todos change, save them to local storage
+  // ✅ Save tasks to localStorage every time they change
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  // When you click the Add button
   const handleAdd = () => {
-    if (input.trim() === "") return; // Don’t add empty tasks
+    if (input.trim() === "") return;
 
     const newTodo: Todo = {
       id: Date.now(),
@@ -52,20 +80,18 @@ function TodoApp() {
       completed: false,
       createdAt: new Date().toLocaleString(),
       color: colors[Math.floor(Math.random() * colors.length)],
-      date: format(selectedDate, "yyyy-MM-dd"),
+      date: formatDate(selectedDate),
       reminder: false,
     };
 
-    setTodos([...todos, newTodo]); // Add the new task to the list
-    setInput(""); // Clear the input box
+    setTodos([...todos, newTodo]);
+    setInput(""); // clear input box
   };
 
-  // Delete a task
   const handleRemove = (id: number) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 
-  // Mark a task as done or not done
   const toggleComplete = (id: number) => {
     setTodos((prev) =>
       prev.map((todo) =>
@@ -74,7 +100,6 @@ function TodoApp() {
     );
   };
 
-  // Turn reminder 🔔 on or off
   const toggleReminder = (id: number) => {
     setTodos((prev) =>
       prev.map((todo) =>
@@ -83,15 +108,14 @@ function TodoApp() {
     );
   };
 
-  // Start editing a task
   const startEdit = (todo: Todo) => {
     setEditingId(todo.id);
     setEditingText(todo.text);
   };
 
-  // Save the edited text
   const saveEdit = (id: number) => {
     if (!editingText.trim()) return;
+
     setTodos((prev) =>
       prev.map((todo) =>
         todo.id === id ? { ...todo, text: editingText } : todo
@@ -101,139 +125,178 @@ function TodoApp() {
     setEditingText("");
   };
 
-  // Change day when you click next or previous
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditingText("");
+  };
+
   const changeDay = (direction: "prev" | "next") => {
     setSelectedDate((prev) =>
       direction === "prev" ? subDays(prev, 1) : addDays(prev, 1)
     );
   };
 
-  // Filter todos to show only those for the selected day and filter tab
   const filteredTodos = todos.filter((todo) => {
-    const matchesDate = todo.date === format(selectedDate, "yyyy-MM-dd");
+    const matchesDate = todo.date === formatDate(selectedDate);
     if (filterTab === "completed") return matchesDate && todo.completed;
     if (filterTab === "pending") return matchesDate && !todo.completed;
     return matchesDate;
   });
 
-  // JSX: what the UI looks like
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleAdd();
+  };
+
+  const handleEditKeyPress = (e: React.KeyboardEvent, id: number) => {
+    if (e.key === "Enter") saveEdit(id);
+    if (e.key === "Escape") cancelEdit();
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        {/* Top section: Day and arrows */}
+        {/* 🔼 Day navigation */}
         <div className="flex justify-between items-center mb-4">
-          <button onClick={() => changeDay("prev")} className="text-lg">
+          <button
+            onClick={() => changeDay("prev")}
+            className="text-lg hover:bg-gray-100 p-2 rounded"
+          >
             ⬅️
           </button>
-          <div>
+          <div className="text-center">
             <p className="text-gray-500 text-sm">
-              {format(selectedDate, "EEEE")}
+              {formatDayName(selectedDate)}
             </p>
             <p className="font-semibold text-lg">
-              {format(selectedDate, "MMMM d, yyyy")}
+              {formatDateDisplay(selectedDate)}
             </p>
           </div>
-          <button onClick={() => changeDay("next")} className="text-lg">
+          <button
+            onClick={() => changeDay("next")}
+            className="text-lg hover:bg-gray-100 p-2 rounded"
+          >
             ➡️
           </button>
         </div>
 
-        {/* Input field and Add button */}
+        {/* ✍️ Input field */}
         <div className="flex items-center mb-6">
           <input
             type="text"
             placeholder="Add a task..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-1 border p-2 rounded-l"
+            onKeyPress={handleKeyPress}
+            className="flex-1 border p-2 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={handleAdd}
-            className="bg-blue-500 text-white px-4 py-2 rounded-r"
+            className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600"
           >
             Add
           </button>
         </div>
 
-        {/* Filter tabs */}
+        {/* 📊 Filter tabs */}
         <div className="flex justify-center gap-4 mb-6">
           <button
             onClick={() => setFilterTab("all")}
-            className="px-4 py-1 rounded-full bg-blue-200 text-blue-800"
+            className={`px-4 py-1 rounded-full ${
+              filterTab === "all"
+                ? "bg-blue-500 text-white"
+                : "bg-blue-200 text-blue-800"
+            }`}
           >
-            All
+            All (
+            {todos.filter((t) => t.date === formatDate(selectedDate)).length})
           </button>
           <button
             onClick={() => setFilterTab("completed")}
-            className="px-4 py-1 rounded-full bg-green-200 text-green-800"
+            className={`px-4 py-1 rounded-full ${
+              filterTab === "completed"
+                ? "bg-green-500 text-white"
+                : "bg-green-200 text-green-800"
+            }`}
           >
-            Completed
+            Completed (
+            {
+              todos.filter(
+                (t) => t.date === formatDate(selectedDate) && t.completed
+              ).length
+            }
+            )
           </button>
           <button
             onClick={() => setFilterTab("pending")}
-            className="px-4 py-1 rounded-full bg-orange-200 text-orange-800"
+            className={`px-4 py-1 rounded-full ${
+              filterTab === "pending"
+                ? "bg-orange-500 text-white"
+                : "bg-orange-200 text-orange-800"
+            }`}
           >
-            Pending
+            Pending (
+            {
+              todos.filter(
+                (t) => t.date === formatDate(selectedDate) && !t.completed
+              ).length
+            }
+            )
           </button>
         </div>
 
-        {/* To-do list */}
-        <ul className="space-y-3">
-          {filteredTodos.map((todo) => (
-            <li
-              key={todo.id}
-              className={`flex items-center justify-between p-4 rounded-md ${todo.color}`}
-            >
-              {editingId === todo.id ? (
-                <>
-                  <input
-                    value={editingText}
-                    onChange={(e) => setEditingText(e.target.value)}
-                    className="flex-1 p-2 mr-2 rounded border"
-                  />
-                  <button onClick={() => saveEdit(todo.id)} className="mr-2">
-                    ✅
-                  </button>
-                  <button onClick={() => setEditingId(null)}>❌</button>
-                </>
-              ) : (
-                <>
-                  <span
-                    onClick={() => toggleComplete(todo.id)}
-                    className={`flex-1 cursor-pointer ${
-                      todo.completed ? "line-through text-gray-500" : ""
-                    }`}
-                  >
-                    {todo.text}
-                  </span>
-                  <button
-                    onClick={() => toggleReminder(todo.id)}
-                    className="mr-2"
-                  >
-                    {todo.reminder ? "🔔" : "🔕"}
-                  </button>
-                  <button onClick={() => startEdit(todo)} className="mr-2">
-                    ✏️
-                  </button>
-                  <button onClick={() => handleRemove(todo.id)}>❌</button>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
+        {/* 📝 Task List */}
+        {filteredTodos.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <p className="text-lg">No tasks for this day yet!</p>
+            <p className="text-sm">Add a task above to get started 🚀</p>
+          </div>
+        ) : (
+          <ul className="space-y-3">
+            {filteredTodos.map((todo) => (
+              <li
+                key={todo.id}
+                className={`flex items-center justify-between p-4 rounded-md ${todo.color} border`}
+              >
+                {editingId === todo.id ? (
+                  <>
+                    <input
+                      value={editingText}
+                      onChange={(e) => setEditingText(e.target.value)}
+                      onKeyPress={(e) => handleEditKeyPress(e, todo.id)}
+                      className="flex-1 p-2 mr-2 rounded border focus:ring-blue-500"
+                      autoFocus
+                    />
+                    <button onClick={() => saveEdit(todo.id)} className="mr-2">
+                      ✅
+                    </button>
+                    <button onClick={cancelEdit}>❌</button>
+                  </>
+                ) : (
+                  <>
+                    <span
+                      onClick={() => toggleComplete(todo.id)}
+                      className={`flex-1 cursor-pointer ${
+                        todo.completed ? "line-through text-gray-500" : ""
+                      }`}
+                    >
+                      {todo.text}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => toggleReminder(todo.id)}>
+                        {todo.reminder ? "🔔" : "🔕"}
+                      </button>
+                      <button onClick={() => startEdit(todo)}>✏️</button>
+                      <button onClick={() => handleRemove(todo.id)}>❌</button>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
 }
-
-// Color options for task backgrounds
-const colors = [
-  "bg-yellow-100",
-  "bg-purple-200",
-  "bg-orange-100",
-  "bg-blue-100",
-  "bg-pink-100",
-  "bg-green-100",
-];
 
 export default TodoApp;
