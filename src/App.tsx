@@ -1,9 +1,11 @@
 import TodoApp from "./Pages/Todo";
 
 function App() {
-  <div>
-    <TodoApp />
-  </div>;
+  return (
+    <div>
+      <TodoApp />
+    </div>
+  );
 }
 
 export default App;
