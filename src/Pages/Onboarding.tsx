@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { TodoImage } from "../Components/Icons/Icon";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import Button from "../Components/Icons/Button";
+import Button from "../Components/Button";
 const slides = [
   {
     title: "Gets things done with TODO",

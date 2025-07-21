@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import OnboardingCarousel from "./Pages/Onboarding";
+import RegistrationPage from "./Pages/Registration";
 
 import TodoApp from "./Pages/Todo";
 function App() {
@@ -8,6 +9,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<OnboardingCarousel />} />
+          <Route path="/register" element={<RegistrationPage />} />
           <Route path="/todo" element={<TodoApp />} />
         </Routes>
       </Router>
