@@ -1,34 +1,92 @@
+import { useState } from "react";
 import Button from "../Components/Button";
-import Input from "../Components/Input"; // <-- import your reusable Input
-import { TbFlower } from "react-icons/tb"; // Tabler Icons (minimal flower)
-import { LuBookOpen } from "react-icons/lu"; // Nice open book, outlined
-import { LuPencil } from "react-icons/lu"; // Lucide pencil (lightweight)
+import Input from "../Components/Input";
+import { TbFlower } from "react-icons/tb";
+import { LuBookOpen, LuPencil } from "react-icons/lu";
 
 export default function RegistrationPage() {
+  const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!username || !phone || !email || !password) {
+      return setError("All fields are required.");
+    }
+
+    if (isNaN(Number(phone))) {
+      return setError("Phone number must be numeric.");
+    }
+
+    if (!email.includes("@") || !email.includes(".")) {
+      return setError("Enter a valid email address.");
+    }
+
+    const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
+    const updatedUsers = [
+      ...existingUsers,
+      { username, phone, email, password },
+    ];
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+
+    // Clear form
+    setUsername("");
+    setPhone("");
+    setEmail("");
+    setPassword("");
+    setError("");
+
+    alert("Registration successful! You can now log in.");
+    window.location.href = "/login";
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center ]#' px-4">
-      <div className="w-full max-w-sm bg-gray-100 rounded-2xl shadow-custom p-6 text-center">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-[#f0f0f0]">
+      <div className="w-full max-w-sm bg-white rounded-2xl shadow-custom p-6 text-center">
         <h2 className="text-xl font-bold mb-1">
-          Welcome Onboard!{" "}
-          <span className="inline-block">
-            <TbFlower />
-          </span>
+          Welcome Onboard! <TbFlower className="inline-block" />
         </h2>
         <p className="text-sm text-gray-600 mb-4">
           Let’s help you meet up your tasks
         </p>
 
-        {/* Emoji */}
         <div className="text-2xl mb-6 flex justify-center gap-4">
           <LuBookOpen />
           <LuPencil />
         </div>
 
-        <form className="flex flex-col gap-4">
-          <Input type="text" placeholder="Username" />
-          <Input type="tel" placeholder="Phone" />
-          <Input type="email" placeholder="Email" />
-          <Input type="password" placeholder="Password" />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <Input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <Input
+            type="tel"
+            placeholder="Phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <Input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
           <Button variant="custom">Register</Button>
         </form>
 
