@@ -1,31 +1,18 @@
-import yellowclock from "../../assets/images/yelloe-clock.jpg";
-import whiteclock from "../../assets/images/white-clock.jpg";
-
+import todoimg from "../../assets/images/todo-image.svg";
 type ImageProps = {
   className?: string;
   width?: number | string;
   height?: number | string;
 };
-
-function YellowClockIcon({ className, width, height }: ImageProps) {
+function TodoImage({ className, width, height }: ImageProps) {
   return (
     <img
-      src={yellowclock}
-      alt="Yellow Clock"
-      className={className}
-      style={{ width, height }}
-    />
-  );
-}
-function WhiteClockIcon({ className, width, height }: ImageProps) {
-  return (
-    <img
-      src={whiteclock}
-      alt="White Clock"
+      src={todoimg}
+      alt="Todo"
       className={className}
       style={{ width, height }}
     />
   );
 }
 
-export { YellowClockIcon, WhiteClockIcon };
+export { TodoImage };
