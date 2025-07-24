@@ -20,13 +20,12 @@ interface Todo {
   color?: string;
   lastNotifiedAt?: number;
 }
-
 const colors = [
-  "bg-yellow-100",
-  "bg-purple-200",
-  "bg-blue-100",
-  "bg-pink-100",
-  "bg-violet-200",
+  "bg-yellow-100 dark:bg-yellow-700",
+  "bg-purple-200 dark:bg-purple-700",
+  "bg-blue-100 dark:bg-blue-700",
+  "bg-pink-100 dark:bg-pink-700",
+  "bg-violet-200 dark:bg-violet-700",
 ];
 const user = JSON.parse(localStorage.getItem("currentUser") || "{}");
 
@@ -190,8 +189,8 @@ function TodoApp() {
         Hello, {user.username}!👋
       </h2>
 
-      <div className="min-h-screen bg-gray-100 p-6">
-        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-6">
+      <div className="min-h-screen p-6">
+        <div className="max-w-4xl mx-auto shadow-lg rounded-2xl p-6">
           {/* Day navigation */}
           <div className="flex justify-between items-center mb-4">
             <button
@@ -225,7 +224,7 @@ function TodoApp() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="flex-1 border border-gray-300 focus:border-blue-500 focus:ring-blue-500 focus:outline-none p-2 rounded-l"
+              className="flex-1 border border-gray-300 bg-white dark:bg-gray-700 text-black dark:text-white focus:border-blue-500 focus:ring-blue-500 focus:outline-none p-2 rounded-l"
             />
             <button
               onClick={handleAdd}
@@ -301,7 +300,7 @@ function TodoApp() {
                         value={editingText}
                         onChange={(e) => setEditingText(e.target.value)}
                         onKeyPress={(e) => handleEditKeyPress(e, todo.id)}
-                        className="flex-1 p-2 mr-2 rounded border border-transparent focus:border-blue-500 focus:ring-blue-500 focus:outline-none"
+                        className="flex-1 p-2 mr-2 rounded border border-transparent bg-white dark:bg-gray-700 text-black dark:text-white focus:border-blue-500 focus:ring-blue-500 focus:outline-none"
                         autoFocus
                       />
                       <button
@@ -319,7 +318,9 @@ function TodoApp() {
                       <span
                         onClick={() => toggleComplete(todo.id)}
                         className={`flex-1 cursor-pointer ${
-                          todo.completed ? "line-through text-gray-500" : ""
+                          todo.completed
+                            ? "line-through text-gray-500 dark:text-gray-400"
+                            : "text-black dark:text-white"
                         }`}
                       >
                         {todo.text}

@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { FiHome, FiUser, FiSettings, FiInfo, FiLogOut } from "react-icons/fi";
 import { useEffect, useState } from "react";
+import { LuBookOpen } from "react-icons/lu";
 
 const navItems = [
   { name: "Dashboard", path: "/todo", icon: <FiHome /> },
@@ -23,17 +24,19 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="hidden md:flex flex-col w-64 h-screen bg-white border-r shadow-sm p-4">
-      <div className="text-2xl font-bold mb-6">📝 ToDo App</div>
+    <aside className=" md:flex flex-col w-64 h-screen border-r shadow-lg p-4">
+      <div className=" flex items-center gap-4 text-2xl font-bold mb-6">
+        <LuBookOpen /> ToDo
+      </div>
       <nav className="flex flex-col gap-2">
         {navItems.map(({ name, path, icon }) => (
           <NavLink
             key={name}
             to={path}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-2 rounded-lg transition-colors ${
+              `flex items-center gap-3 px-4 py-2 rounded-2xl transition-colors ${
                 isActive || active === path
-                  ? "bg-pink-100 text-pink-600 font-semibold"
+                  ? "bg-[#ffc6ff] text-pink-600 font-semibold"
                   : "text-gray-600 hover:bg-gray-100"
               }`
             }
