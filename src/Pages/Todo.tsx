@@ -23,11 +23,10 @@ interface Todo {
 const colors = [
   "bg-yellow-100 dark:bg-yellow-700",
   "bg-purple-200 dark:bg-purple-700",
-  "bg-blue-100 dark:bg-blue-700",
-  "bg-pink-100 dark:bg-pink-700",
+  "bg-blue-200 dark:bg-blue-700",
+  "bg-pink-200 dark:bg-pink-700",
   "bg-violet-200 dark:bg-violet-700",
 ];
-const user = JSON.parse(localStorage.getItem("currentUser") || "{}");
 
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
 
@@ -184,177 +183,166 @@ function TodoApp() {
   };
 
   return (
-    <div>
-      <h2 className="text-xl text-blue-500 font-bold mb-4 ml-4">
-        Hello, {user.username}!👋
-      </h2>
+    <div className="min-h-screen p-6  bg-white dark:bg-gray-900 text-black dark:text-white">
+      <div className="max-w-4xl max-auto rounded-2xl shadow-custom p-6 text-center bg-white dark:bg-gray-800">
+        {/* Day navigation */}
+        <div className="flex justify-between items-center mb-4">
+          <button
+            onClick={() => changeDay("prev")}
+            className="text-lg hover:bg-gray-200 p-2 rounded"
+          >
+            <FaArrowLeft className="text-blue-500" />
+          </button>
 
-      <div className="min-h-screen p-6">
-        <div className="max-w-4xl mx-auto shadow-lg rounded-2xl p-6">
-          {/* Day navigation */}
-          <div className="flex justify-between items-center mb-4">
-            <button
-              onClick={() => changeDay("prev")}
-              className="text-lg hover:bg-gray-200 p-2 rounded"
-            >
-              <FaArrowLeft className="text-blue-500" />
-            </button>
-
-            <div className="text-center">
-              <p className="text-gray-500 text-sm">
-                {formatDayName(selectedDate)}
-              </p>
-              <p className="font-semibold text-lg">
-                {formatDateDisplay(selectedDate)}
-              </p>
-            </div>
-            <button
-              onClick={() => changeDay("next")}
-              className="text-lg hover:bg-gray-200 p-2 rounded"
-            >
-              <FaArrowRight className="text-blue-500" />
-            </button>
+          <div className="text-center">
+            <p className="text-gray-500 text-sm">
+              {formatDayName(selectedDate)}
+            </p>
+            <p className="font-semibold text-lg">
+              {formatDateDisplay(selectedDate)}
+            </p>
           </div>
-
-          {/* Input field */}
-          <div className="flex items-center mb-6">
-            <input
-              type="text"
-              placeholder="Add a task..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              className="flex-1 border border-gray-300 bg-white dark:bg-gray-700 text-black dark:text-white focus:border-blue-500 focus:ring-blue-500 focus:outline-none p-2 rounded-l"
-            />
-            <button
-              onClick={handleAdd}
-              className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600"
-            >
-              Add
-            </button>
-          </div>
-
-          {/* Filter tabs */}
-          <div className="flex justify-center gap-4 mb-6">
-            <button
-              onClick={() => setFilterTab("all")}
-              className={`px-4 py-1 rounded-full transition-colors hover:bg-blue-300 ${
-                filterTab === "all"
-                  ? "bg-blue-500 text-white"
-                  : "bg-blue-200 text-blue-800"
-              }`}
-            >
-              All (
-              {todos.filter((t) => t.date === formatDate(selectedDate)).length})
-            </button>
-            <button
-              onClick={() => setFilterTab("completed")}
-              className={`px-4 py-1 rounded-full transition-colors hover:bg-green-300 ${
-                filterTab === "completed"
-                  ? "bg-green-500 text-white"
-                  : "bg-green-200 text-green-800"
-              }`}
-            >
-              Completed (
-              {
-                todos.filter(
-                  (t) => t.date === formatDate(selectedDate) && t.completed
-                ).length
-              }
-              )
-            </button>
-            <button
-              onClick={() => setFilterTab("pending")}
-              className={`px-4 py-1 rounded-full transition-colors hover:bg-orange-300 ${
-                filterTab === "pending"
-                  ? "bg-orange-500 text-white"
-                  : "bg-orange-200 text-orange-800"
-              }`}
-            >
-              Pending (
-              {
-                todos.filter(
-                  (t) => t.date === formatDate(selectedDate) && !t.completed
-                ).length
-              }
-              )
-            </button>
-          </div>
-
-          {/* Task list */}
-          {filteredTodos.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <p className="text-lg">No tasks for this day yet!</p>
-              <p className="text-sm">Add a task above to get started </p>
-            </div>
-          ) : (
-            <ul className="space-y-3">
-              {filteredTodos.map((todo) => (
-                <li
-                  key={todo.id}
-                  className={`flex items-center justify-between p-4 rounded-md ${todo.color} border`}
-                >
-                  {editingId === todo.id ? (
-                    <>
-                      <input
-                        value={editingText}
-                        onChange={(e) => setEditingText(e.target.value)}
-                        onKeyPress={(e) => handleEditKeyPress(e, todo.id)}
-                        className="flex-1 p-2 mr-2 rounded border border-transparent bg-white dark:bg-gray-700 text-black dark:text-white focus:border-blue-500 focus:ring-blue-500 focus:outline-none"
-                        autoFocus
-                      />
-                      <button
-                        onClick={() => saveEdit(todo.id)}
-                        className="mr-2"
-                      >
-                        <FaCheck className="bg-green-500 p-1 rounded text-white inline-flex items-center justify-center" />
-                      </button>
-                      <button onClick={cancelEdit}>
-                        <MdCancel className="text-red-500" />
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <span
-                        onClick={() => toggleComplete(todo.id)}
-                        className={`flex-1 cursor-pointer ${
-                          todo.completed
-                            ? "line-through text-gray-500 dark:text-gray-400"
-                            : "text-black dark:text-white"
-                        }`}
-                      >
-                        {todo.text}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => toggleReminder(todo.id)}
-                          className={`p-1 rounded transition-colors ${
-                            todo.reminder
-                              ? "text-blue-500 hover:text-blue-600"
-                              : "text-gray-400 hover:text-gray-600"
-                          }`}
-                          title={
-                            todo.reminder
-                              ? "Notification on"
-                              : "Notification off"
-                          }
-                        >
-                          {todo.reminder ? <FaBell /> : <FaBellSlash />}
-                        </button>
-                        <button onClick={() => startEdit(todo)}>
-                          <FaEdit className="text-blue-500 hover:text-blue-700" />
-                        </button>
-                        <button onClick={() => handleRemove(todo.id)}>
-                          <MdCancel className="text-red-500 hover:text-red-700" />
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
+          <button
+            onClick={() => changeDay("next")}
+            className="text-lg hover:bg-gray-200 p-2 rounded"
+          >
+            <FaArrowRight className="text-blue-500" />
+          </button>
         </div>
+
+        {/* Input field */}
+        <div className="flex items-center mb-6">
+          <input
+            type="text"
+            placeholder="Add a task..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            className="flex-1 border border-gray-300 bg-white dark:bg-gray-700 text-black dark:text-white focus:border-blue-500 focus:ring-blue-500 focus:outline-none p-2 rounded-l"
+          />
+          <button
+            onClick={handleAdd}
+            className="bg-none text-blue-500 border border-blue-500 px-4 py-2 rounded-r hover:bg-blue-600"
+          >
+            Add
+          </button>
+        </div>
+
+        {/* Filter tabs */}
+        <div className="flex justify-center gap-4 mb-6">
+          <button
+            onClick={() => setFilterTab("all")}
+            className={`px-4 py-1 rounded-full transition-colors hover:bg-blue-300 ${
+              filterTab === "all"
+                ? "bg-blue-500 text-white"
+                : "bg-blue-200 text-blue-800"
+            }`}
+          >
+            All (
+            {todos.filter((t) => t.date === formatDate(selectedDate)).length})
+          </button>
+          <button
+            onClick={() => setFilterTab("completed")}
+            className={`px-4 py-1 rounded-full transition-colors hover:bg-green-300 ${
+              filterTab === "completed"
+                ? "bg-green-500 text-white"
+                : "bg-green-200 text-green-800"
+            }`}
+          >
+            Completed (
+            {
+              todos.filter(
+                (t) => t.date === formatDate(selectedDate) && t.completed
+              ).length
+            }
+            )
+          </button>
+          <button
+            onClick={() => setFilterTab("pending")}
+            className={`px-4 py-1 rounded-full transition-colors hover:bg-orange-300 ${
+              filterTab === "pending"
+                ? "bg-orange-500 text-white"
+                : "bg-orange-200 text-orange-800"
+            }`}
+          >
+            Pending (
+            {
+              todos.filter(
+                (t) => t.date === formatDate(selectedDate) && !t.completed
+              ).length
+            }
+            )
+          </button>
+        </div>
+
+        {/* Task list */}
+        {filteredTodos.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <p className="text-lg">No tasks for this day yet!</p>
+            <p className="text-sm">Add a task above to get started </p>
+          </div>
+        ) : (
+          <ul className="space-y-3">
+            {filteredTodos.map((todo) => (
+              <li
+                key={todo.id}
+                className={`flex items-center justify-between p-4 rounded-md ${todo.color} border`}
+              >
+                {editingId === todo.id ? (
+                  <>
+                    <input
+                      value={editingText}
+                      onChange={(e) => setEditingText(e.target.value)}
+                      onKeyPress={(e) => handleEditKeyPress(e, todo.id)}
+                      className="flex-1 p-2 mr-2 rounded border border-transparent bg-white dark:bg-gray-700 text-black dark:text-white focus:border-blue-500 focus:ring-blue-500 focus:outline-none"
+                      autoFocus
+                    />
+                    <button onClick={() => saveEdit(todo.id)} className="mr-2">
+                      <FaCheck className="bg-green-500 p-1 rounded text-white inline-flex items-center justify-center" />
+                    </button>
+                    <button onClick={cancelEdit}>
+                      <MdCancel className="text-red-500" />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <span
+                      onClick={() => toggleComplete(todo.id)}
+                      className={`flex-1 cursor-pointer ${
+                        todo.completed
+                          ? "line-through text-gray-500 dark:text-gray-400"
+                          : "text-black dark:text-white"
+                      }`}
+                    >
+                      {todo.text}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => toggleReminder(todo.id)}
+                        className={`p-1 rounded transition-colors ${
+                          todo.reminder
+                            ? "text-blue-500 hover:text-blue-600"
+                            : "text-gray-400 hover:text-gray-600"
+                        }`}
+                        title={
+                          todo.reminder ? "Notification on" : "Notification off"
+                        }
+                      >
+                        {todo.reminder ? <FaBell /> : <FaBellSlash />}
+                      </button>
+                      <button onClick={() => startEdit(todo)}>
+                        <FaEdit className="text-blue-500 hover:text-blue-700" />
+                      </button>
+                      <button onClick={() => handleRemove(todo.id)}>
+                        <MdCancel className="text-red-500 hover:text-red-700" />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

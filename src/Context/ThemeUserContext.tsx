@@ -19,19 +19,19 @@ export const ThemeUserContext = createContext<ThemeUserContextType | undefined>(
 );
 
 export function ThemeUserProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  // Initialize directly from localStorage
+  const [theme, setTheme] = useState<Theme>(() => {
+    return (localStorage.getItem("theme") as Theme) || "light";
+  });
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as Theme;
-    const savedUser = JSON.parse(localStorage.getItem("currentUser") || "null");
-    if (savedTheme) setTheme(savedTheme);
-    if (savedUser) setCurrentUser(savedUser);
-  }, []);
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    return JSON.parse(localStorage.getItem("currentUser") || "null");
+  });
 
+  // Sync theme to document and localStorage
   useEffect(() => {
-    localStorage.setItem("theme", theme);
     document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {

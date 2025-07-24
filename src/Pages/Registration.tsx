@@ -45,8 +45,8 @@ export default function RegistrationPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#f0f0f0]">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-custom p-6 text-center">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-white dark:bg-gray-900 text-black dark:text-white">
+      <div className="w-full max-w-sm rounded-2xl shadow-custom p-6 text-center bg-white dark:bg-gray-800">
         <h2 className="text-xl font-bold mb-1">
           Welcome Onboard! <TbFlower className="inline-block" />
         </h2>
@@ -90,7 +90,7 @@ export default function RegistrationPage() {
           <Button variant="custom">Register</Button>
         </form>
 
-        <p className="text-bold text-gray-900 mt-4">
+        <p className="text-bold text-gray-600 mt-4">
           Already have an account?{" "}
           <a href="/login" className="text-pink-500 font-medium">
             Sign In

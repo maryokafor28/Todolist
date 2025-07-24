@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { TodoImage } from "../Components/Icons/Icon";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import Button from "../Components/Button";
@@ -28,6 +30,24 @@ export default function OnboardingCarousel() {
   const timeoutRef = useRef<number | null>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    if (users.length > 0) {
+      navigate("/login"); // Go to login if registered
+    } else {
+      navigate("/register"); // Go to register otherwise
+    }
+  };
+  useEffect(() => {
+    if (current === slides.length - 1) {
+      const timer = setTimeout(() => {
+        handleGetStarted(); // Redirect after 2 sec
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  });
 
   const resetTimer = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -75,7 +95,7 @@ export default function OnboardingCarousel() {
       <div className="absolute top-10">{slides[current].image}</div>
 
       {/* Arrows and dots between image and card */}
-      <div className="flex justify-between items-center mt-10 w-80 z-10">
+      <div className="flex justify-between items-center mt-10 w-80">
         <button
           onClick={goToPrev}
           className="text-2xl text-black disabled:text-gray-300"
@@ -106,7 +126,8 @@ export default function OnboardingCarousel() {
 
       {/* Card below */}
       <div
-        className="w-80 rounded-2xl p-6 pt-10 mt-6 bg-white flex flex-col shadow-custom"
+        className="w-100 rounded-2xl p-12 pt-20 mt-6 bg-white dark:bg-gray-800 
+  text-gray-900 dark:text-white flex flex-col shadow-custom"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -115,7 +136,7 @@ export default function OnboardingCarousel() {
           <p className="text-base mb-8">{slides[current].description}</p>
         </div>
 
-        <Button onClick={goToNext} variant="custom">
+        <Button onClick={handleGetStarted} variant="custom">
           Get Started
         </Button>
       </div>

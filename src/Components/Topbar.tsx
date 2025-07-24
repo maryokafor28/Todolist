@@ -14,8 +14,8 @@ export default function Topbar() {
   return (
     <header className="flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-900 shadow-md">
       {/* Hello, username */}
-      <h1 className="text-xl font-semibold ">
-        Hello, {currentUser?.username || "Guest"}
+      <h1 className="text-xl text-blue-500 font-semibold ">
+        Hello, {currentUser?.username || "Guest"} 👋
       </h1>
 
       {/* Right Side Buttons */}
@@ -31,7 +31,7 @@ export default function Topbar() {
         {/* Profile Button */}
         <button
           onClick={() => navigate("/profile")}
-          className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 transition flex items-center gap-2"
+          className="px-3 py-1  bg-none text-gray-600 hover:bg-blue-600 hover:text-white rounded-xl transition flex items-center gap-2"
         >
           <FiUser /> Profile
         </button>
@@ -39,7 +39,7 @@ export default function Topbar() {
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600 transition flex items-center gap-2"
+          className="px-3 py-1 rounded bg-none  text-red-500 hover:bg-red-100 rounded-xl transition flex items-center gap-2"
         >
           <FiLogOut /> Logout
         </button>
