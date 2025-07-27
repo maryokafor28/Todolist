@@ -4,6 +4,7 @@ import Button from "../Components/Button";
 import { useNavigate } from "react-router-dom";
 import { ZigzagImage, ArrowhitImage } from "../Components/Icons/Icon";
 import { TbFlower } from "react-icons/tb";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 type User = {
   username: string | number;
@@ -14,6 +15,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,12 +60,23 @@ export default function Login() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          {/* Password field with toggle */}
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pr-10" // space for eye icon
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-3 text-gray-500"
+            >
+              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </button>
+          </div>
 
           <div className="text-left text-sm text-purple-400 hover:underline cursor-pointer">
             Forgot Password

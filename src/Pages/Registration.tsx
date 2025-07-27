@@ -81,12 +81,6 @@ export default function RegistrationPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
 
           {/* Password field with toggle */}
           <div className="relative">
