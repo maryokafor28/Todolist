@@ -5,6 +5,7 @@ import Login from "./Pages/Login";
 import TodoApp from "./Pages/Todo";
 import Layout from "./Components/Layout";
 import { useThemeUser } from "./Context/useThemeUser";
+import LandingPage from "./Pages/LandingPage";
 
 function App() {
   const { theme } = useThemeUser();
@@ -16,7 +17,8 @@ function App() {
         <Router>
           <Routes>
             {/* Pages WITHOUT sidebar */}
-            <Route path="/" element={<OnboardingCarousel />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/onboarding" element={<OnboardingCarousel />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/login" element={<Login />} />
 

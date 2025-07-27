@@ -3,12 +3,15 @@ import Button from "../Components/Button";
 import Input from "../Components/Input";
 import { TbFlower } from "react-icons/tb";
 import { LuBookOpen, LuPencil } from "react-icons/lu";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 export default function RegistrationPage() {
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -84,6 +87,24 @@ export default function RegistrationPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+
+          {/* Password field with toggle */}
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pr-10" // space for eye icon
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-3 text-gray-500"
+            >
+              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </button>
+          </div>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 

@@ -1,27 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { TodoImage } from "../Components/Icons/Icon";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { BookImage } from "../Components/Icons/Icon";
 import Button from "../Components/Button";
+
 const slides = [
   {
     title: "Gets things done with TODO",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Interdum dictum tempus, interdum at dignissim metus. Ultricies sed nunc.",
-    image: <TodoImage />,
+      "Plan smarter, stress less, and stay on top of your day with a simple and powerful to‑do app designed just for you.",
+
+    image: <BookImage />,
   },
   {
     title: "Stay Organized Easily",
     description:
       "Keep track of your daily tasks and deadlines with a smart checklist system that works for you.",
-    image: <TodoImage />,
+    image: <BookImage />,
   },
   {
     title: "Be More Productive",
     description:
       "Boost your focus and accomplish more by prioritizing and completing your todos with ease.",
-    image: <TodoImage />,
+    image: <BookImage />,
   },
 ];
 
@@ -34,21 +35,10 @@ export default function OnboardingCarousel() {
 
   const handleGetStarted = () => {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
-    if (users.length > 0) {
-      navigate("/login"); // Go to login if registered
-    } else {
-      navigate("/register"); // Go to register otherwise
-    }
+    navigate(users.length > 0 ? "/login" : "/register");
   };
-  useEffect(() => {
-    if (current === slides.length - 1) {
-      const timer = setTimeout(() => {
-        handleGetStarted(); // Redirect after 2 sec
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  });
 
+  // Auto slide every 5s
   const resetTimer = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
@@ -65,13 +55,10 @@ export default function OnboardingCarousel() {
     };
   }, [current]);
 
-  const goToNext = () => {
-    setCurrent((prev) => (prev + 1) % slides.length);
-  };
-
-  const goToPrev = () => {
+  // Touch gestures for swipe
+  const goToNext = () => setCurrent((prev) => (prev + 1) % slides.length);
+  const goToPrev = () =>
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-  };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.changedTouches[0].clientX;
@@ -90,53 +77,49 @@ export default function OnboardingCarousel() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative px-4 pt-28 pb-8 text-gray-900">
-      {/* Image above everything */}
-      <div className="absolute top-10">{slides[current].image}</div>
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-4 pt-20 pb-8
+      text-gray-900 dark:text-white 
+      
+      md:flex-row md:items-center md:justify-center md:gap-20 md:px-20 md:pt-0"
+    >
+      {/* IMAGE SECTION - mobile: centered, desktop: left side */}
+      <div className="mb-6 md:mb-0 relative flex justify-center md:justify-end ">
+        <div className="w-56 h-full md:w-72 md:h-72 lg:w-80 lg:h-80 mx-auto rounded-xl overflow-hidden shadow-lg">
+          <div className="w-full h-auto object-">{slides[current].image}</div>
+        </div>
+      </div>
 
-      {/* Arrows and dots between image and card */}
-      <div className="flex justify-between items-center mt-10 w-80">
-        <button
-          onClick={goToPrev}
-          className="text-2xl text-black disabled:text-gray-300"
-          disabled={current === 0}
-        >
-          <FiArrowLeft className="text-2xl" />
-        </button>
+      {/* TEXT + DOTS + BUTTON SECTION */}
+      <div
+        className="w-80 md:w-[600px] rounded-2xl p-8 md:p-12 bg-white dark:bg-gray-800 shadow-custom text-center md:text-center"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Title */}
+        <h2 className="font-bold text-xl md:text-3xl mb-4 md:mb-6">
+          {slides[current].title}
+        </h2>
 
-        <div className="flex gap-2">
+        {/* Description */}
+        <p className="text-base md:text-lg mb-6 md:mb-8">
+          {slides[current].description}
+        </p>
+
+        {/* Dots (above button) */}
+        <div className="flex gap-2 justify-center md:justify-center mb-6">
           {slides.map((_, index) => (
             <div
               key={index}
               className={`h-1 rounded-full transition-all duration-300 ${
-                current === index ? "w-10 bg-pink-400" : "w-6 bg-gray-300"
+                current === index ? "w-4 bg-pink-400" : "w-2 bg-gray-300"
               }`}
             ></div>
           ))}
         </div>
 
-        <button
-          onClick={goToNext}
-          className="text-2xl text-black disabled:text-gray-300"
-          disabled={current === slides.length - 1}
-        >
-          <FiArrowRight className="text-2xl" />
-        </button>
-      </div>
-
-      {/* Card below */}
-      <div
-        className="w-100 rounded-2xl p-12 pt-20 mt-6 bg-white dark:bg-gray-800 
-  text-gray-900 dark:text-white flex flex-col shadow-custom"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className="text-center mb-4">
-          <h2 className="font-bold text-xl mb-8">{slides[current].title}</h2>
-          <p className="text-base mb-8">{slides[current].description}</p>
-        </div>
-
-        <Button onClick={handleGetStarted} variant="custom">
+        {/* Button */}
+        <Button onClick={handleGetStarted} variant="custom" className="w-full">
           Get Started
         </Button>
       </div>
