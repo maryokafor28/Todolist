@@ -1,34 +1,36 @@
 TODO APP
 
-This is a simple and practical Todo application that allows users to write and manage their daily tasks efficiently. Users can:
-
-Add new tasks to their todo list
-
-Receive reminder notifications for upcoming tasks
-
-View pending tasks that are yet to be completed
-
-The app is built with React and styled using Tailwind CSS, ensuring a clean and responsive user interface. It's designed for personal productivity, helping users stay organized and on track throughout the day.
+Overview
+This is a simple and practical Todo application built with React for managing daily tasks efficiently. The app allows users to add, edit, delete, and filter tasks, with built-in reminder notifications to stay organized.
+It also features dark/light theme support using useContext and Firebase integration for user authentication and cross-device task synchronization, ensuring your data is always accessible no matter where you log in.
 
 FEATURES
 
-Add, edit, and delete tasks
+Task Management: Add, edit, delete, and filter tasks to manage your daily schedule efficiently.
+Reminders: Receive notifications for tasks with due times.
+Dark/Light Mode: Toggle between themes globally using useContext.
+Cross-Device Sync: Uses Firebase to store tasks and user data across multiple devices.
+Persistent Login: Stay signed in with Firebase Authentication.
+Offline Persistence: Tasks are cached locally using localStorage, so they remain accessible even when offline (synced with Firebase when online).
+Responsive UI: Optimized for both mobile and desktop using Tailwind CSS.
 
-Reminder notifications for tasks with due times
 
-Filter tasks by date and view pending items
-
-Mobile-friendly layout with responsive design
-
-Styled using Tailwind CSS
-
-Simple and intuitive user experience
+CORE FUNCTIONALITY
+Integrated React Hooks (useState, useEffect) to manage task state and reminders.
+Added Theme Toggle (Dark/Light Mode) with useContext for global theme control.
+Improved UI/UX with Tailwind CSS for a clean and flexible layout.
 
 TECH STACK
 React – Frontend JavaScript library
-
+React Hooks – For state and side-effect management
+useContext API – For global theme state (Dark/Light mode)
 Tailwind CSS – Utility-first CSS framework for styling
+Integrates Firebase for authentication and cross-device task storage.
+
 
 Vite – Fast development build tool
+LocalStorage – To persist tasks between sessions
 
-LocalStorage – To persist tasks between browser sessions
+AUTENTICATION AND DATA STORAGE
+Implements Firebase Authentication API to securely handle user login and ensure that users remain signed in across any device.
+Uses Firebase Realtime Database / Firestore to store and sync todo lists, allowing users to access
