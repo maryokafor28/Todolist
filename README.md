@@ -7,11 +7,17 @@ It also features dark/light theme support using useContext and Firebase integrat
 FEATURES
 
 Task Management: Add, edit, delete, and filter tasks to manage your daily schedule efficiently.
+
 Reminders: Receive notifications for tasks with due times.
+
 Dark/Light Mode: Toggle between themes globally using useContext.
+
 Cross-Device Sync: Uses Firebase to store tasks and user data across multiple devices.
+
 Persistent Login: Stay signed in with Firebase Authentication.
+
 Offline Persistence: Tasks are cached locally using localStorage, so they remain accessible even when offline (synced with Firebase when online).
+
 Responsive UI: Optimized for both mobile and desktop using Tailwind CSS.
 
 
