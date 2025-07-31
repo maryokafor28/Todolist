@@ -1,6 +1,7 @@
 TODO APP
 
 Overview
+
 This is a simple and practical Todo application built with React for managing daily tasks efficiently. The app allows users to add, edit, delete, and filter tasks, with built-in reminder notifications to stay organized.
 It also features dark/light theme support using useContext and Firebase integration for user authentication and cross-device task synchronization, ensuring your data is always accessible no matter where you log in.
 
@@ -46,6 +47,7 @@ Vite – Fast development build tool
 LocalStorage – To persist tasks between sessions
 
 AUTENTICATION AND DATA STORAGE
+
 Implements Firebase Authentication API to securely handle user login and ensure that users remain signed in across any device.
 
 Uses Firebase Realtime Database / Firestore to store and sync todo lists, allowing users to access their tasks seamlessly from multiple devices.
