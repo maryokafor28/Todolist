@@ -22,21 +22,30 @@ Responsive UI: Optimized for both mobile and desktop using Tailwind CSS.
 
 
 CORE FUNCTIONALITY
+
 Integrated React Hooks (useState, useEffect) to manage task state and reminders.
+
 Added Theme Toggle (Dark/Light Mode) with useContext for global theme control.
+
 Improved UI/UX with Tailwind CSS for a clean and flexible layout.
 
 TECH STACK
 React – Frontend JavaScript library
+
 React Hooks – For state and side-effect management
+
 useContext API – For global theme state (Dark/Light mode)
+
 Tailwind CSS – Utility-first CSS framework for styling
+
 Integrates Firebase for authentication and cross-device task storage.
 
 
 Vite – Fast development build tool
+
 LocalStorage – To persist tasks between sessions
 
 AUTENTICATION AND DATA STORAGE
 Implements Firebase Authentication API to securely handle user login and ensure that users remain signed in across any device.
-Uses Firebase Realtime Database / Firestore to store and sync todo lists, allowing users to access
+
+Uses Firebase Realtime Database / Firestore to store and sync todo lists, allowing users to access their tasks seamlessly from multiple devices.
